@@ -1,0 +1,32 @@
+# Spec: Simulator of Curved 3D Space on the Surface of 4D Shapes
+
+## 1. Task
+
+A browser-based HTML/JS application: the user moves freely through three-dimensional space — the intrinsic geometry of a hypersurface (a 3-manifold) bounding a 4-dimensional shape in R⁴. The curvature is the result of computations on the 4D representation, not a visual imitation.
+
+## 2. Representation and Movement
+
+- The world is stored and computed as an object in R⁴.
+- The observer's position and orientation are a point and a local tangent frame on the manifold.
+- Movement transports the observer's entire frame (forward, "up," "right") along the manifold via parallel transport, not by recomputation using a global rule.
+- Both classes of hypersurfaces are required:
+  - smooth (C², curvature defined at every point via the curvature tensor of the induced metric, geodesics as the solution of a differential equation);
+  - piecewise-flat (the boundary of a 4-dimensional polytope: flat metric within cells, curvature concentrated as an angular defect on a singular submanifold, geodesics continue into the adjacent cell upon crossing a face).
+- Forbidden: shader-based distortion layered over Euclidean geometry; fisheye/cubemap skybox effects while the camera moves along a flat trajectory; manipulation limited to the projection matrix/FOV; any method where the actual coordinates remain flat 3D and the curvature is merely an on-screen effect.
+
+## 3. Light and Rendering
+
+Rays propagate along geodesics of the induced metric (in piecewise-flat scenes — continuing across faces). Visual distortions are a direct result of this computation.
+
+## 4. Scenes
+
+- At least 4 scenes: one smooth with positive curvature, one smooth with non-positive/mixed-sign curvature, and at least one piecewise-flat scene with non-trivial topology (not simply connected and/or featuring "exit on one side, reappear on the other").
+- Each scene must contain visually distinguishable landmarks for judging distance and path curvature. A single repeating primitive (stripes, dots, a grid) as the entire visual content of a scene is not allowed.
+
+At least 4 scenes: one smooth with positive curvature, one smooth with non-positive/mixed-sign curvature, and at least one piecewise-flat scene with non-trivial topology (not simply connected and/or featuring "exit on one side, reappear on the other").
+The manifold's surface carries texture across the entire scene area — no empty background — since the curvature must also be visible through its distortion. Landmarks are heterogeneous and asymmetrically arranged; a single repeating primitive (stripes, dots, a grid) as the entire visual content of a scene is not allowed.
+- In scenes with non-trivial topology: if a single landmark is visible simultaneously from multiple directions, all its visible images are rendered from one and the same 4D object instance via different identification paths. Check: modifying the object synchronously changes all of its images.
+
+## 5. Controls and Architecture
+
+A main menu with scene selection and a way to return to it. Free real-time flight through the manifold. HTML as the entry point, with JS/shaders/scene data in separate files. No mandatory build step; if a build step exists, include run instructions.
